@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+    <title>PHPMailer</title>
+</head>
+<body>
+<form enctype="multipart/form-data" method="post" id="form_id" onsubmit="send(event, 'send.php'); javascript:return validate('form_id','email');" class="form">
+    <p>Имя</p>
+    <input placeholder="Представьтесь" name="name" type="text" id="name">
+    <p>Email</p>
+    <input placeholder="Укажите почту" name="email" type="text" id="email">
+    <p>Сообщение</p>
+    <div class="input-box message-box">
+    <textarea name="text"></textarea>
+    </div>
+    <p>Прикрепить файлы</p>
+    <input type="file" name="myfile[]" multiple id="myfile">
+    <input value="Отправить" type="submit"></p>
+</form>
+</body>
+
+<script>
+function validate(form_id,email) {
+   var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+   var address = document.forms[form_id].elements[email].value;
+   if(reg.test(address) == false) {
+      alert('Введите корректный e-mail');
+      return false;
+   }
+}
+
+// Отправка данных на сервер
+function send(event, php){
+console.log("Отправка запроса");
+event.preventDefault ? event.preventDefault() : event.returnValue = false;
+var req = new XMLHttpRequest();
+req.open('POST', php, true);
+req.onload = function() {
+    if (req.status >= 200 && req.status < 400) {
+    json = JSON.parse(this.response);
+        console.log(json);
+        
+        // ЗДЕСЬ УКАЗЫВАЕМ ДЕЙСТВИЯ В СЛУЧАЕ УСПЕХА ИЛИ НЕУДАЧИ
+        if (json.result == "success") {
+            // Если сообщение отправлено
+            alert("Сообщение отправлено");
+        } else {
+            // Если произошла ошибка
+            alert("Ошибка. Сообщение не отправлено");
+        }
+    // Если не удалось связаться с php файлом
+    } else {alert("Ошибка сервера. Номер: "+req.status);}}; 
+
+// Если не удалось отправить запрос.
+req.onerror = function() {alert("Ошибка отправки запроса");};
+req.send(new FormData(event.target));
+}
+</script>
+</html>
