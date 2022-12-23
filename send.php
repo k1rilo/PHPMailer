@@ -1,7 +1,15 @@
 <?php
+use Dotenv\Dotenv;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
+require_once "vendor/autoload.php";
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+
+$login = getenv('LOGIN');
+$password = getenv('PASSWORD');
 
 // Файлы phpmailer
 require 'phpmailer/PHPMailer.php';
@@ -24,6 +32,7 @@ $body = "
 <b>Сообщения:</b><br>$text
 ";
 
+
 // Настройки phpmailer
 
 $mail = new PHPMailer\PHPMailer\PHPMailer();
@@ -38,11 +47,11 @@ try {
     //Настройка почты
 
     $mail->Host = 'smtp.yandex.ru';// SMTP сервера почты
-    $mail->Username = 'k1rilo-1991@yandex.ru';// Логин на почте
-    $mail->Password = 'kqcgjilmzwduhhky';// Пароль на почте
+    $mail->Username = $login;// Логин на почте
+    $mail->Password = $password;// Пароль на почте
     $mail->SMTPSecure = 'ssl';
     $mail->Port = 465;
-    $mail->setFrom('k1rilo-1991@yandex.ru', 'kirill');// Адрес почты и имя отправителя
+    $mail->setFrom('kirill.ochkurov1@yandex.ru', 'kirill');// Адрес почты и имя отправителя
 
     // Получатель письма
 
